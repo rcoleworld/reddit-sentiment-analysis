@@ -1,2 +1,7 @@
 *.csv
 .vscode
+.svn
+keys
+savedmodels
+.DS_Store
+__pycache__
