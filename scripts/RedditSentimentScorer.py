@@ -35,7 +35,7 @@ class RedditSentimentScorer:
             "neutral": "{}%".format(round(neutral_score, 1)), 
             "negative": "{}%".format(round(negative_score, 1))
         }
-        self.results.append((comment, result, score))
+        self.results.append((result, score, comment))
 
         return score
 
