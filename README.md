@@ -150,7 +150,7 @@ Here is an example of this library in action:
 
 {'neg': 0.508, 'neu': 0.492, 'pos': 0.0, 'compound': -0.4767}
 ```
-The "compound" value in these scores are the overall sentiment scores with the sign representing the positivity (+) or negativity (-) of the text.
+The "compound" values in these scores are the overall sentiment scores with the sign representing the positivity (+) or negativity (-) of the text.
 
 ## Comparing Both Approaches
 To compare these approaches let’s consider the following sentences:
