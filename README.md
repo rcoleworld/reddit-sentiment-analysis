@@ -1,34 +1,34 @@
 # Reddit Sentiment Analysis 
 
 ## Overview
-This research I did ia on sentiment analysis and how a sentiment classifier can be used to determine how Redditors feel about certain posts/topics. This project explores both machine learning and algorithmic approaches to this problem and considers the benefits of both. 
+This research I did was on sentiment analysis and how a sentiment classifier can be used to determine how Redditors feel about certain posts/topics. This project explores both machine learning and algorithmic approaches to this problem and considers the benefits of both. 
 
-The algorithmic library that was explored during this project is Vader. This library is a rule based approach to this problem that can handle idioms and even emojis. I created a basic algorithm that merely checked for word occurrences to use along with Vader and my machine learning approach to see how a simple approach would compare to these more complex approaches.
+The algorithmic library that was explored during this project is Vader. This library is a rule-based approach to this problem that can handle idioms and even emojis. I also created a basic algorithm that merely checked for word occurrences to use along with Vader and my machine learning approach to see how a simpler approach would compare to these more complex approaches.
 
-The machine learning approach used during this project was a Sklearn random forest classifier. This model was trained on a dataset containing 50,000 verbose movie reviews and achieved ~85% accuracy on a testing set, though this accuracy can vary in practice.
+The machine learning model used during this project was a Sklearn random forest classifier. This model was trained on a dataset containing 50,000 verbose movie reviews and achieved ~85% accuracy on a testing set, though this accuracy can vary in practice.
 
 ## Exploration of ML Approach: Challenges
-There were multiple challenges with building a model that can accurately classify sentiments. First of which, was finding an appropriate data set. Throughout the research I trained on multiple datasets. Some were very verbose akin to the movie review one that I settled on. Some from social media which included a lot of slang and misspelled words and some with multiple different classification outcomes than merely positive or negative.
+There were multiple challenges with building a model that can accurately classify sentiments. First of which, was finding an appropriate data set. Throughout the research I trained on multiple datasets. Some were very verbose akin to the movie review dataset which I settled on. Some were from social media and included a lot of slang and misspelled words. One had multiple classifications other than the typical positive and negative sentiments.
 
-The ones from social media had too many word misspellings and slang. The dataset was likely created during the infancy of social media when users used more word shortenings and abbreviations than modern users do today. This dataset is not as practical when the target users are Redditors who are more verbose than social media platforms in the early 2010’s. 
+The ones from social media had too many word misspellings and slang. These datasets were likely created near the infancy of social media when users used more word shortenings and abbreviations than modern users do today. These datasets were not as practical when the target users are Redditors who are more verbose than social media platforms in the early 2010’s. 
 
-The one containing multiple classification outputs had a lower accuracy of around 30%. This makes sense because it is very difficult to accurately and consistently distinguish similar sentiments such as anger vs hate. The problem of having multiple sentiments contained in the same string is a pitfall. Take the text: “I am thoroughly upset at what is going on with the world. I am scared for my life and the lives of my family members. Why did our government not warn us of this danger? I despise the situation we are in and I am so sad for those who have lost their lives. I hate this world right now”. This text can fall under multiple categories such as anger, hate, and worry. This was interesting but due to time constraints was not explored further, though would be interesting future research.
+The dataset containing multiple classification outputs had an accuracy of around 30%. This makes sense because it is very difficult to accurately and consistently distinguish similar sentiments such as anger vs hate. The problem of having multiple sentiments contained in the same string is a pitfall. Take the text: “I am thoroughly upset at what is going on with the world. I am scared for my life and the lives of my family members. Why did our government not warn us of this danger? I despise the situation we are in and I am so sad for those who have lost their lives. I hate this world right now”. This text can fall under multiple categories such as anger, hate, and worry. This was a very interesting problem but due to time constraints was not explored further, though would be great for future research.
 
-The data set chosen was a verbose set of movie reviews with a binary classification: positive or negative. This dataset was lengthy and contained text that was verbose enough to create an effective model for Reddit. 
+The dataset chosen was a verbose set of movie reviews with a binary classification: positive or negative. This dataset was lengthy and contained text that was verbose enough to create an effective model for Reddit. 
 
 ## Exploration of ML Approach: Preprocessing
-The models I used were SciKitLearn's [random forest classifier](##Exploration-of-ML:-Random-Forests-in-a-Nutshell). Though, before training the text had to be preprocessed and a feature set had to be created so the model could be trained. 
+The models I trained utilized SciKitLearn's [random forest classifier](##Exploration-of-ML:-Random-Forests-in-a-Nutshell). Before training the text had to be preprocessed and a feature set had to be created so the model could be trained. 
 
 Firstly, we must preprocess the data. 
 
-The first step in this process is converting the words in the text to lowercase. This can be done in python like this:
+The first step in this process is to convert the words in the text to lowercase. This can be done in python like this:
 ```Python
 for word in text:
     word = word.lower()
 ```
 This ensures that words like "Hello", "hEllo" and "hello" are all equivalent. 
 
-The next step in text preprocessing would be to convert all words to their stems. This will transform words like "amazingly" to "amaze". Doing this makes all words with the same root or stem equivalent so that when we create a feature set these words all treated as the same. This can be done in python using external libraries like this:
+The next step in text preprocessing would be to convert all words to their stems. This will transform words like "amazingly" to "amaze". Doing this makes all words with the same root or stem equivalent so that when we create a feature set these words will all be treated as the same. This can be done in python using external libraries like this:
 ```Python
 from nltk.stem import PorterStemmer
 port_stem = PorterStemmer()
@@ -37,19 +37,20 @@ for word in text:
     word = port_stem.stem(word)
 ```
 
-After doing these steps there are numerous techniques you can use to tweak accuracy. I did not use these because of the duration it took for my model to be trained due to the size of the dataset but these are a few more ways to further preprocess the data. 
+There are numerous more preprocessing techniques that can be used to tweak accuracy. These were omitted from my finalized model due to training taking upwards of four hours. There was simply not enough time to see which combination of these techniques would be most optimal.
 
-Once of these steps is to remove stop words. A stop words is a word like "the", "a", or "of" these words occur very frequently and carry little meaning. Since our feature set will be a dictionary containing count of the k most frequent words we would like to avoid these words taking spots in our feature set. We can accomplish this with the following code:
+One of these steps is to remove stop words. A stop words is a word similar to "the", "a", or "of"; these words occur very frequently and carry little meaning. Since our feature set will be a dictionary containing a count of the k most frequent words, we would like to avoid these words cluttering our feature set with words which carry little meaning. We can accomplish this with the following code:
 
 ```Python
 from ntlk.corpus import stopwords
-words = 'He the best of all of them'
+words = 'He is the best of all of them'
 new_words = [word for word in words if word not in stopwords.words('english')]
 >>> new_words
 ['He', 'best']
 ```
+Since our feature set was larger this did not make much of a difference for us. 
 
-More preprocessing steps would be to remove symbols. A simple python regular expression for this is:
+Another preprocessing step would be to remove symbols. A simple python regular expression for this is:
 
 ```Python
 import re
@@ -60,7 +61,7 @@ my_string = re.sub('[^a-zA-Z0-9 \n\.]', '', my_string)
 ```
 
 ## Exploration of ML Approach: Building Features
-Now that we have processed this data, we must now determine how we can train a machine learning algorithm to perform classifications on this data. We cant just a bunch of text to a random forest algorithm and expect to get very far. This is were feature sets come in. 
+Now that we have processed this data, we must determine how we can train a machine learning algorithm to perform classifications. We can’t just import a bunch of text to a random forest algorithm and expect to get very far. This is where feature sets come in. 
 
 For our word set we want to find the frequencies of all of the words in the dataset after these words are preprocessed. We then want to take the k most frequent words where k is the feature set size in which we specify. This can be done using nltk as shown below:
 
@@ -74,15 +75,15 @@ for word in words:
 
 feature_words = list(frequency_dist)[:size_of_feature_set]
 ```
-Now that we have the word features of the dataset, we can  use these to build the feature sets of each row in our dataset. These features sets are dictionaries with the word as the key and a boolean representing whether or not the word is in the row for the value. We do this for all of the words contained in the word features. After we do this for every row in our dataset we can now train a forest classifier on these feature sets.
+Now that we have the word features of the dataset, we can use these to build the feature sets of each row in our dataset. These features sets are dictionaries with the word as the key and a Boolean representing whether or not the word is in the row for the value. We do this for all of the words contained in the word features. After we do this for every row in our dataset, we can now train a forest classifier on these feature sets.
 
 ## Exploration of ML: Random Forests in a Nutshell
 
-Lets say we have an image with just a solid color. This color is a bluish color that looks like it might also be purple. We want to know what this color is so we post a poll online so people can vote on the color. Most likely the answer with the most votes will be correct. This is an odd example but we do see this all of the time online. On Chegg, for example the correct answers tend to get more upvotes. 
+Let’s say we have an image with just a solid color. This color is a bluish color that looks like it might also be purple. We want to know what this color is so we post a poll online so people can vote on the color. Most likely the answer with the most votes will be correct. This is an odd example, but we do see this all of the time online. On Chegg, for example, the correct answers tend to get more upvotes. 
  
 Why are we talking about colors? Well a random forest works in a similar way. A random forest is made up of many decision trees. The decision trees in a random forest essentially vote on the classification. The answer with the most votes is chosen for the classification.
 
-These decision trees which make up a random forest are essentially a series of questions. Each node in the tree represents a question with each of the two pointers to the next node being the answers to the question. Below is an example of this where the tree is representing the decision of what clothes to wear.
+These decision trees are essentially comprised of a series of questions. Each node in the tree represents a question with each of the two pointers to the next node being the answers to the question. Below is a very simplified example of this where the tree is representing the decision of which clothing item to wear outside.
 
 ```
 Is it cold outside?
@@ -97,11 +98,11 @@ Jacket    T-shirt
 This idea is scalable and can be used for more complex classifications.
 
 ## Algorithm Approach: Naive
-After training a model with the Sklearn random forest classifier I decided to come up with my own algorithmic approach to this problem. 
+After training a model with the Sklearn random forest classifier I decided to come up with my own simple algorithmic approach to this problem. 
 
 This repository contains separate files of positive and negative words: https://github.com/shekhargulati/sentiment-analysis-python/tree/master/opinion-lexicon-English
 
-I put these words in a python set and then converted the text to a set to remove duplicates. I then took the intersection between the text and the negative words, and the text and the positive words. For the neutral words, I merely took the percentage of words that were not in the intersection of either set. Here is the script: 
+I put these words in a python set. I also converted the text that I wanted to classify to a set to remove duplicates. I then took the intersection between the text and the negative words, and the text and the positive words. For the neutral words, I merely took the percentage of words that were not in the intersection of either set. Here is this idea in python: 
 
 ```Python
 negative_score = len(negativewords & text_set) / len(text_set) * 100
@@ -116,7 +117,7 @@ Another variation of this approach that I experimented with involved taking leng
 
 
 ```
-"I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it.I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it."
+"I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it. I hated it."
 ```
 
 I believe the first one should have a higher negative score than the second one. The first one is verbose and really shows how much the author disliked the movie. The second one was low effort and showed little meaning. If we remove duplicate words by taking the set of both of these, the first text will have a longer set than the second one.
@@ -133,7 +134,7 @@ I believe the first one should have a higher negative score than the second one.
 This is a simple approach I came up with to derive a sentiment intensity of various strings.
 
 ## Algorithm Approach: Advanced (Vader)
-Vader is a robust sentiment analysis library. This library works by having dictionaries of various word categories. Each word in these dictionaries have multipliers that affect the overall sentiments in the words. The categories include negations, emojis, boosters (like "absolutely" and "very"), idioms, and special cases. 
+Vader is a robust sentiment analysis library. This library works by having dictionaries of various word categories. Each word in these dictionaries have multipliers which affect the overall sentiments of the text. The categories include negations, emojis, boosters (like "absolutely" and "very"), idioms, and special cases. 
 
 Here is an example of this library in action:
 
@@ -148,10 +149,10 @@ Here is an example of this library in action:
 
 {'neg': 0.508, 'neu': 0.492, 'pos': 0.0, 'compound': -0.4767}
 ```
-The "compound" value in these scores are the overall sentiment scores with the sign representing the positivity or negativity(-) of the text.
+The "compound" value in these scores are the overall sentiment scores with the sign representing the positivity or negativity (-) of the text.
 
 ## Comparing Both Approaches
-To compare these approaches lets consider the following sentences:
+To compare these approaches let’s consider the following sentences:
 ```
 1. That movie was good.
 ```
@@ -160,7 +161,7 @@ and
 ```
 2. That was not good.
 ```
-These sentences are very similar (at least for a computer) but have the opposite meaning. A machine learning model has to be trained to hopefully be able to detect this. Lets see if ours can:
+These sentences are very similar (at least for a computer) yet have opposite meanings. A machine learning model has to learn the difference that the word “not” makes in sentences like this. Let’s see if ours did:
 
 ```Python
 >>> c.classify_new_sentence("That was good")
@@ -170,11 +171,11 @@ negative
 ```
 Our machine learning model was able to correctly classify these two examples but sometimes the model can be inaccurate.
 
-These type of classifications are more accurate using an algorithmic approach such as vader. Lets take the following word:
+These types of classifications are more accurate using an algorithmic approach such as Vader. Let’s take the following word:
 ```
 good
 ```
-This will yield a positive sentiment using vader. Now, lets add a negation to this word:
+This will yield a positive sentiment using Vader. Now, let’s add a negation to this word:
 
 ```
 not good
@@ -189,10 +190,10 @@ This yields a positive negation because the two negations cancel each other out.
 <negation>^n <word> where positive if n % 2 = 0 else negative 
 ```
 
-It would be very difficult (if possible) for a machine learning model to learn this particular pattern. 
+It would be unlikely for our machine learning model to learn this particular pattern. 
 
 ## Conclusion
-After all of these concepts are applied and a model is trained, it is simple to connect the model to the praw reddit api to experiment with. In this case lets connect this to a post on a Computer Science subreddit.
+After all of these concepts are applied, it is simple to connect our classifier to the Reddit API to experiment with. In this case lets connect this to a post on a Computer Science subreddit.
 
 Here are the results:
 ```
@@ -296,12 +297,10 @@ Here are the results:
 
 ('Nobody cares.', 'negative', {'positive': '0.0%', 'neutral': '100.0%', 'negative': '0.0%'})
 
-('Jake can suck my big fat cock.', 'negative', {'positive': '0.0%', 'neutral': '66.7%', 'negative': '33.3%'})
-
 ('AYYYY JAKES MY BOI', 'negative', {'positive': '0.0%', 'neutral': '100.0%', 'negative': '0.0%'})
 
 ```
-As you can see these results are semi-accurate but I am satisfied with them for my first machine learning project.
+As you can see these results are semi-accurate, though I am satisfied with them for my first machine learning project.
 
 ## Sources
 Thank you to the following articles and tutorials that made this project possible:
